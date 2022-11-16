@@ -1,0 +1,8 @@
+<div id="divMessages" class="messages" >
+    <div *ngFor="let msg of this.signalRService.listMessages$ | async">{{msg}}</div>
+</div>
+<div class="input-zone">
+    <label id="lblMessage" for="tbMessage">Message:</label>
+    <input #msg id="tbMessage" class="input-zone-input" type="text" />
+    <button id="btnSend" (click)="send(msg)" >Send</button>
+</div>
