@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,10 @@ export class SignalrService {
   private readonly _http: HttpClient;
   private hubConnection!: signalR.HubConnection; 
   private listMessages: string[] = [];
-  public listMessages$: Observable<string[]> = of(this.listMessages);
+  public listMessages$: Observable<string[]> = of(this.listMessages)
+      .pipe(
+        tap(msg => console.log(msg)) //for debug
+      )
   
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) { 
     this._http = http;
