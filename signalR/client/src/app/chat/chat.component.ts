@@ -26,7 +26,7 @@ export class ChatComponent implements OnInit {
 
   send(tb: HTMLInputElement) {
     console.log(tb.value);
-    this.signalRService.sendMsg("Jeff", tb.value)
+    this.signalRService.sendMsg(tb.value)
       .then(() => (tb.value = ""));
   }
 }

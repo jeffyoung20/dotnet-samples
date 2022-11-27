@@ -11,6 +11,7 @@ export class SignalrService {
   private baseUrl: string;
   private readonly _http: HttpClient;
   private hubConnection!: signalR.HubConnection; 
+  private connectionId: string | undefined;
   private listMessages: string[] = [];
   public listMessages$: Observable<string[]> = of(this.listMessages)
       .pipe(
@@ -28,18 +29,24 @@ export class SignalrService {
                             .build();
     this.hubConnection
       .start()
-      .then(() => console.log('Connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err))
+      .then(() => {
+        console.log("Start Connection");
+        this.hubConnection.invoke("GetConnectionId")
+          .then((connectionId)=>{
+            console.log(connectionId);
+            this.connectionId = connectionId;})})
+      .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public addChatListener() {
-    this.hubConnection.on('messageReceived', (_username: string, message: string)  => {
-      console.log("Message Received: " + message);
-      this.listMessages.push(message);
+    this.hubConnection.on('messageReceived', (username: string, message: string)  => {
+      const msg = `ClientID: ${username},  Message:  ${message}`;
+      console.log("Message Received: " + msg);
+      this.listMessages.push(msg);
     });
   }
 
-  public sendMsg(userName: string, msg: string) {
-    return this.hubConnection.send("NewMessage", userName, msg);
+  public sendMsg( msg: string) {
+    return this.hubConnection.send("NewMessage", this.connectionId, msg);
   }
 }
