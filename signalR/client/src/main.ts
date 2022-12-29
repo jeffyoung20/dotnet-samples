@@ -9,7 +9,9 @@ if (environment.production) {
 }
 
 export function getBaseUrl() {
-  return "https://localhost:7254/"; //API
+  //let baseUrl: string = "https://localhost:7254/";
+  let baseUrl: string = environment.baseUrl;
+  return baseUrl; //API
   //return document.getElementsByTagName('base')[0].href;
 }
 
